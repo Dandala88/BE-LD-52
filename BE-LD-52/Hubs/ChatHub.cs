@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using BE_LD_52.Models;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BE_LD_52.Hubs
 {
     public class ChatHub : Hub
     {
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(GameAction action)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            System.Diagnostics.Debug.WriteLine(action.UserId);
+            await Clients.All.SendAsync("ReceiveMessage", action);
         }
     }
 }
