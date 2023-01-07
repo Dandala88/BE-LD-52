@@ -78,21 +78,59 @@ namespace BE_LD_52.Services
             return new GridInfo();
         }
 
-        public async Task<Cell> UpdateCell(Cell cell)
+        public async Task<Cell> UpdateCell(int x, int y, string gameAction)
         {
             var container = _cosmosClient.GetContainer("griddatabase", "gridcontainer");
 
             try
             {
-                var cellId = $"{cell.X}|{cell.Y}";
-                cell.id = cellId;
-                var newCell = await container.UpsertItemAsync<Cell>(cell, partitionKey: new PartitionKey(cellId));
-                return newCell;
+                var cellId = $"{x}|{y}";
+
+                var getCell = await GetCellInfo(x, y);
+
+                if (gameAction == null) return getCell;
+
+                var cellNextState =  VerifyNextState(getCell, gameAction);
+
+                if(getCell.State == cellNextState)
+                    return getCell;
+
+                var cell = new Cell()
+                {
+                    id = getCell.id,
+                    X = x,
+                    Y = y,
+                    State = cellNextState,
+                    UserId = null //temp
+                };
+
+                return await container.UpsertItemAsync<Cell>(cell, partitionKey: new PartitionKey(cellId));
             }
             catch (Exception ex)
             {
                 return null;
             }
+        }
+
+        private string VerifyNextState(Cell cell, string gameAction)
+        {
+            switch(cell.State)
+            {
+                case "Raw":
+                    if (gameAction == "Till")
+                        return ("Tilled");
+                    break;
+                case "Tilled":
+                    if (gameAction == "Sow")
+                        return ("Sown");
+                    break;
+                case "Sown":
+                    if (gameAction == "Harvest")
+                        return ("Raw");
+                    break;
+            }
+
+            return cell.State;
         }
     }
 }
