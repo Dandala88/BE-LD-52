@@ -12,9 +12,9 @@ namespace BE_LD_52.Services
             _cosmosClient = new CosmosClient(connectionString: config.GetSection("Cosmos").Value);
         }
 
-        public Task InitializeGrid(int width, int height)
+        public async Task InitializeGrid(int width, int height)
         {
-            throw new NotImplementedException();
+            var container = _cosmosClient.GetContainer("griddatabase", "gridcontainer");
         }
     }
 }
