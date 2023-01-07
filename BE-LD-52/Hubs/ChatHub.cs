@@ -13,9 +13,9 @@ namespace BE_LD_52.Hubs
             _userService = userService;
         }
 
-        public async Task GetUser(string id)
+        public async Task GetUser(GameUser gameUser)
         {
-            var userData = await _userService.GetUserData(id);
+            var userData = await _userService.GetUserData(gameUser);
             await Clients.Caller.SendAsync("ReceiveUser", userData);
         }
 
