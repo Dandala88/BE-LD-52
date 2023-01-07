@@ -24,6 +24,7 @@ namespace BE_LD_52.Services
                     var newCell = new Cell()
                     {
                         id = $"{i}|{j}",
+                        User = null,
                         State = "Raw"
                     };
                     var grid = await container.CreateItemAsync(newCell, new PartitionKey(newCell.id));

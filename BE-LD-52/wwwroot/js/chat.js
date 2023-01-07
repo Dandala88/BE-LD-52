@@ -55,3 +55,11 @@ document.getElementById("getUserInfo").addEventListener("click", function (event
     });
     event.preventDefault();
 });
+
+document.getElementById("initGrid").addEventListener("click", function (event) {
+    var key = document.getElementById("initkey").value;
+    connection.invoke("InitializeGrid", 10, 10, key).catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});

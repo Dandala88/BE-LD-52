@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGridService, GridService>();
 
 builder.Services.AddCors(options =>
 {

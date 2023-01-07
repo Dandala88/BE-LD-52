@@ -7,10 +7,14 @@ namespace BE_LD_52.Hubs
     public class ChatHub : Hub
     {
         private readonly IUserService _userService;
+        private readonly IGridService _gridService;
+        private string _key;
 
-        public ChatHub(IUserService userService)
+        public ChatHub(IConfiguration config, IUserService userService, IGridService gridService)
         {
             _userService = userService;
+            _gridService = gridService;
+            _key = config.GetSection("InitKey").Value;
         }
 
         public async Task GetUser(GameUser gameUser)
@@ -24,9 +28,12 @@ namespace BE_LD_52.Hubs
             await Clients.All.SendAsync("ReceiveMessage", action);
         }
 
-        public async Task InitializeGrid(int width, int height)
+        public async Task InitializeGrid(int width, int height, string key)
         {
+            if (_key != key)
+                return;
 
+            await _gridService.InitializeGrid(width, height);
         }
     }
 }

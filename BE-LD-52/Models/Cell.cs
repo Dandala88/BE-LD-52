@@ -3,6 +3,7 @@
     public class Cell
     {
         public string id { get; set; }
+        public string User { get; set; }
         public string State { get; set; }
     }
 }
