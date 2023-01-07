@@ -14,7 +14,7 @@ namespace BE_LD_52.Services
 
         public Task InitializeGrid(int width, int height)
         {
-            
+            throw new NotImplementedException();
         }
     }
 }

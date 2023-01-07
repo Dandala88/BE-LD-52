@@ -9,9 +9,9 @@ namespace BE_LD_52.Services
     {
         private readonly CosmosClient _cosmosClient;
 
-        public UserService()
+        public UserService(IConfiguration config)
         {
-            _cosmosClient = new CosmosClient(connectionString: config.GetSection("Cosmos").Value);
+            _cosmosClient = new CosmosClient(connectionString: "AccountEndpoint=https://ld52-harvest.documents.azure.com:443/;AccountKey=EQxh9cB79iv6ozeWb035p9J97MTuDt3XRs02qkc7HOzqQiCToSNdhAB0iqpxoJn7Iegmlsd5gXdHACDbvkavKA==;");
         }
 
         public async Task<GameUser?> GetUserData(GameUser gameUser)
