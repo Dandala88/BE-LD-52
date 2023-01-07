@@ -38,7 +38,8 @@ namespace BE_LD_52.Hubs
 
         public async Task GetGrid()
         {
-            await Clients.All.SendAsync("ReceiveGrid");
+            var grid = await _gridService.GetGrid();
+            await Clients.All.SendAsync("ReceiveGrid", grid);
         }
 
         public async Task GetCellInfo(int x, int y)

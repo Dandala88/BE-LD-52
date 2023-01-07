@@ -1,6 +1,7 @@
 ﻿using BE_LD_52.Models;
 using BE_LD_52.Services.Interfaces;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Linq;
 
 namespace BE_LD_52.Services
 {
@@ -40,6 +41,8 @@ namespace BE_LD_52.Services
                     var newCell = new Cell()
                     {
                         id = $"{i}|{j}",
+                        X = i,
+                        Y = j,
                         State = "Raw"
                     };
                     var grid = await container.CreateItemAsync(newCell, new PartitionKey(newCell.id));
@@ -48,9 +51,30 @@ namespace BE_LD_52.Services
 
         }
 
-        public async Task GetGrid()
+        public async Task<GridInfo> GetGrid()
         {
+            var container = _cosmosClient.GetContainer("griddatabase", "gridcontainer");
 
+            try
+            {
+                var q = container.GetItemLinqQueryable<Cell>();
+                var iterator = q.ToFeedIterator();
+                var results = await iterator.ReadNextAsync();
+                var coords = results.Last().id.Split("|");
+                var gridInfo = new GridInfo()
+                {
+                    Width = Int32.Parse(coords[0]) + 1,
+                    Height = Int32.Parse(coords[1]) + 1,
+                    Grid = results.ToList()
+                };
+                var t = "";
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            return new GridInfo();
         }
 
         public async Task<Cell> UpdateCell(Cell cell)

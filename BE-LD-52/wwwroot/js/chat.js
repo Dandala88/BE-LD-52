@@ -81,3 +81,10 @@ document.getElementById("updateCell").addEventListener("click", function (event)
     });
     event.preventDefault();
 });
+
+document.getElementById("getGrid").addEventListener("click", function (event) {
+    connection.invoke("GetGrid").catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});
