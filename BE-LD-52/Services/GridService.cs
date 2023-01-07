@@ -114,19 +114,21 @@ namespace BE_LD_52.Services
 
         private string VerifyNextState(Cell cell, string gameAction)
         {
-            switch(cell.State)
+            var state = cell.State.ToLower();
+            var theAction = gameAction.ToLower();
+            switch (state)
             {
                 case "Raw":
-                    if (gameAction == "Till")
-                        return ("Tilled");
+                    if (theAction == "till")
+                        return ("tilled");
                     break;
                 case "Tilled":
-                    if (gameAction == "Sow")
-                        return ("Sown");
+                    if (theAction == "sow")
+                        return ("sown");
                     break;
                 case "Sown":
-                    if (gameAction == "Harvest")
-                        return ("Raw");
+                    if (theAction == "harvest")
+                        return ("raw");
                     break;
             }
 
