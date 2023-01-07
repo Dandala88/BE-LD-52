@@ -118,15 +118,15 @@ namespace BE_LD_52.Services
             var theAction = gameAction.ToLower();
             switch (state)
             {
-                case "Raw":
+                case "raw":
                     if (theAction == "till")
                         return ("tilled");
                     break;
-                case "Tilled":
+                case "tilled":
                     if (theAction == "sow")
                         return ("sown");
                     break;
-                case "Sown":
+                case "sown":
                     if (theAction == "harvest")
                         return ("raw");
                     break;
