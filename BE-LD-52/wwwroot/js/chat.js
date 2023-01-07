@@ -14,6 +14,13 @@ connection.on("ReceiveMessage", function (full) {
     li.textContent = `${full.userId} says ${full.type}`;
 });
 
+connection.on("ReceiveUser", function (user) {
+    var username = document.getElementById("username");
+    var userid = document.getElementById("userid");
+    username.innerText = user.name;
+    userid.innerText = user.id;
+});
+
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
 }).catch(function (err) {
@@ -29,6 +36,19 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     }
     console.log(full);
     connection.invoke("SendMessage", full).catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});
+
+document.getElementById("getUserInfo").addEventListener("click", function (event) {
+    var userId = crypto.randomUUID();
+    var name = document.getElementById("userInput").value;
+    var newUser = {
+        Id: userId,
+        Name: name
+    }
+    connection.invoke("GetUser", newUser).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();

@@ -1,10 +1,13 @@
 using BE_LD_52.Hubs;
+using BE_LD_52.Services;
+using BE_LD_52.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
