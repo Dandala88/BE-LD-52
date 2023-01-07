@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
         policy.AllowAnyHeader()
             .AllowAnyMethod()
             .WithOrigins("http://localhost:3000")
-            .WithOrigins("https://ld52.vercel.app/")
+            .WithOrigins("https://ld52.vercel.app")
             .AllowCredentials();
     });
 });
