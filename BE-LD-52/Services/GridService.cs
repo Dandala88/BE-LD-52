@@ -67,11 +67,12 @@ namespace BE_LD_52.Services
                     Height = Int32.Parse(coords[1]) + 1,
                     Grid = results.ToList()
                 };
-                var t = "";
+                
+                return gridInfo;
             }
             catch(Exception ex)
             {
-
+                return null;
             }
 
             return new GridInfo();

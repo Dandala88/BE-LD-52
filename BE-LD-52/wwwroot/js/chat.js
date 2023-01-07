@@ -60,7 +60,7 @@ document.getElementById("initGrid").addEventListener("click", function (event) {
     var key = document.getElementById("initkey").value;
     var x = document.getElementById("columns").value;
     var y = document.getElementById("rows").value;
-    connection.invoke("InitializeGrid", x, y, key).catch(function (err) {
+    connection.invoke("InitializeGrid", parseInt(x), parseInt(y), key).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();
