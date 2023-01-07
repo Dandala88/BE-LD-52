@@ -34,18 +34,18 @@ namespace BE_LD_52.Services
         {
             var container = _cosmosClient.GetContainer("griddatabase", "gridcontainer");
 
-            for(int i = 0; i < width; i++)
+            for(int i = 0; i < height; i++)
             {
-                for(int j = 0; j < height; j++)
+                for(int j = 0; j < width; j++)
                 {
                     var newCell = new Cell()
                     {
-                        id = $"{i}|{j}",
-                        X = i,
-                        Y = j,
+                        id = $"{j}|{i}",
+                        X = j,
+                        Y = i,
                         State = "Raw"
                     };
-                    var grid = await container.CreateItemAsync(newCell, new PartitionKey(newCell.id));
+                    var grid = await container.UpsertItemAsync(newCell, new PartitionKey(newCell.id));
                 }
             }
 
