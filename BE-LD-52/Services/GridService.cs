@@ -13,6 +13,22 @@ namespace BE_LD_52.Services
             _cosmosClient = new CosmosClient(connectionString: config.GetSection("Cosmos").Value);
         }
 
+        public async Task<Cell> GetCellInfo(int x, int y)
+        {
+            var container = _cosmosClient.GetContainer("griddatabase", "gridcontainer");
+
+            try
+            {
+                var cellId = $"{x}|{y}";
+                var cell = await container.ReadItemAsync<Cell>(cellId, partitionKey: new PartitionKey(cellId));
+                return cell;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task InitializeGrid(int width, int height)
         {
             var container = _cosmosClient.GetContainer("griddatabase", "gridcontainer");
@@ -31,6 +47,22 @@ namespace BE_LD_52.Services
                 }
             }
 
+        }
+
+        public async Task<Cell> UpdateCell(Cell cell)
+        {
+            var container = _cosmosClient.GetContainer("griddatabase", "gridcontainer");
+
+            try
+            {
+                var cellId = $"{cell.X}|{cell.Y}";
+                var newCell = await container.UpsertItemAsync<Cell>(cell, partitionKey: new PartitionKey(cellId));
+                return newCell;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }
