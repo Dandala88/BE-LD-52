@@ -16,28 +16,28 @@ namespace BE_LD_52.Services
             );
         }
 
-        public async Task<GameUser> GetUserData(GameUser gameUser)
+        public async Task<GameUser?> GetUserData(GameUser gameUser)
         {
+            if (gameUser.id == null)
+                return null;
+
+            var container = _cosmosClient.GetContainer("userdatabase", "usercontainer");
+
             try
             {
-                var container = _cosmosClient.GetContainer("userdatabase", "usercontainer");
+                var user = await container.ReadItemAsync<GameUser>(gameUser.id, partitionKey: new PartitionKey(gameUser.id));
+                return user;
+            }
+            catch (CosmosException ex)
+            {
                 if (gameUser.Name == null)
-                {
-                    var user = await container.ReadItemAsync<GameUser>(gameUser.id, partitionKey: new PartitionKey(gameUser.id));
-                    return user;
-                }
-                if(gameUser.Name != null && gameUser.id != null)
-                {
-                    var user = await container.CreateItemAsync(gameUser, new PartitionKey(gameUser.id));
-                    return user;
-                }
-                else
-                    throw new Exception("Missing user info: please provide an id and name");
+                    return null;
+                var user = await container.CreateItemAsync(gameUser, new PartitionKey(gameUser.id));
+                return user;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                throw;
+                return null;
             }
         }
     }

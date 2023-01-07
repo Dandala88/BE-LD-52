@@ -44,6 +44,8 @@ document.getElementById("sendButton").addEventListener("click", function (event)
 document.getElementById("getUserInfo").addEventListener("click", function (event) {
     var userId = crypto.randomUUID();
     var name = document.getElementById("userInput").value;
+    if (!name)
+        userId = "ageneratedid"
     var newUser = {
         Id: userId,
         Name: name
