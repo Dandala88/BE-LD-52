@@ -43,7 +43,7 @@ namespace BE_LD_52.Services
                         id = $"{j}|{i}",
                         X = j,
                         Y = i,
-                        State = "Raw"
+                        State = "raw"
                     };
                     var grid = await container.UpsertItemAsync(newCell, new PartitionKey(newCell.id));
                 }
@@ -130,6 +130,14 @@ namespace BE_LD_52.Services
                     if (theAction == "harvest")
                         return ("raw");
                     break;
+                default:
+                    if(theAction == "whoops")
+                    {
+                        Thread.Sleep(10000);
+                        return ("whoops");
+                    }
+                    break;
+
             }
 
             return cell.State;
