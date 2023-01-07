@@ -65,3 +65,19 @@ document.getElementById("initGrid").addEventListener("click", function (event) {
     });
     event.preventDefault();
 });
+
+document.getElementById("updateCell").addEventListener("click", function (event) {
+    var newState = document.getElementById("newState").value;
+    var x = document.getElementById("newX").value;
+    var y = document.getElementById("newY").value;
+    var newCell =
+    {
+        X : parseInt(x),
+        Y : parseInt(y),
+        State : newState
+    }
+    connection.invoke("UpdateCell", newCell).catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});

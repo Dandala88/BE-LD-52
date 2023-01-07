@@ -40,12 +40,16 @@ namespace BE_LD_52.Services
                     var newCell = new Cell()
                     {
                         id = $"{i}|{j}",
-                        User = null,
                         State = "Raw"
                     };
                     var grid = await container.CreateItemAsync(newCell, new PartitionKey(newCell.id));
                 }
             }
+
+        }
+
+        public async Task GetGrid()
+        {
 
         }
 
@@ -56,6 +60,7 @@ namespace BE_LD_52.Services
             try
             {
                 var cellId = $"{cell.X}|{cell.Y}";
+                cell.id = cellId;
                 var newCell = await container.UpsertItemAsync<Cell>(cell, partitionKey: new PartitionKey(cellId));
                 return newCell;
             }

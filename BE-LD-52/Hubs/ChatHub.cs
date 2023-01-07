@@ -36,16 +36,23 @@ namespace BE_LD_52.Hubs
             await _gridService.InitializeGrid(width, height);
         }
 
+        public async Task GetGrid()
+        {
+            await Clients.All.SendAsync("ReceiveGrid");
+        }
+
         public async Task GetCellInfo(int x, int y)
         {
+            List<Cell> grid = new List<Cell>();
+
             var cell = await _gridService.GetCellInfo(x, y);
-            await Clients.All.SendAsync("CellInfo", cell);
+            await Clients.All.SendAsync("ReceiveCell", cell);
         }
 
         public async Task UpdateCell(Cell cellUpdate)
         {
             var cell = await _gridService.UpdateCell(cellUpdate);
-            await Clients.All.SendAsync("UpdatedCell");
+            await Clients.All.SendAsync("ReceiveCell");
         }
     }
 }
