@@ -23,5 +23,10 @@ namespace BE_LD_52.Hubs
         {
             await Clients.All.SendAsync("ReceiveMessage", action);
         }
+
+        public async Task InitializeGrid(int width, int height)
+        {
+
+        }
     }
 }

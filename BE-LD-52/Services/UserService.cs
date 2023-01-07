@@ -11,9 +11,7 @@ namespace BE_LD_52.Services
 
         public UserService()
         {
-            _cosmosClient = new CosmosClient(
-                connectionString: "AccountEndpoint=https://ld52.documents.azure.com:443/;AccountKey=BUiM1hdx5QOdppghIb4v27278g1Vuzj9XlUjsNVQilgP8YdSGVaG1S4rwzGDzgXrISFuwbZZpZo6ACDb3QQTfA==;"
-            );
+            _cosmosClient = new CosmosClient(connectionString: config.GetSection("Cosmos").Value);
         }
 
         public async Task<GameUser?> GetUserData(GameUser gameUser)
