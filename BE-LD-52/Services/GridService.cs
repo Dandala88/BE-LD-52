@@ -121,6 +121,11 @@ namespace BE_LD_52.Services
                 case "raw":
                     if (theAction == "till")
                         return ("tilled");
+                    else if (theAction == "whoops")
+                    {
+                        Thread.Sleep(10000);
+                        return ("whoops");
+                    }
                     break;
                 case "tilled":
                     if (theAction == "sow")
@@ -130,14 +135,6 @@ namespace BE_LD_52.Services
                     if (theAction == "harvest")
                         return ("raw");
                     break;
-                default:
-                    if(theAction == "whoops")
-                    {
-                        Thread.Sleep(10000);
-                        return ("whoops");
-                    }
-                    break;
-
             }
 
             return cell.State;
