@@ -59,7 +59,7 @@ namespace BE_LD_52.Hubs
 
         public async Task UpdateCell(string userId, int x, int y, string gameAction, string? cropType = null)
         {
-            var cell = await _gridService.PrepareCell(userId, x, y, gameAction, cropType);
+            var cell = await _gridService.PrepareCell(Context.ConnectionId, userId, x, y, gameAction, cropType);
 
             if (cell != null)
             {

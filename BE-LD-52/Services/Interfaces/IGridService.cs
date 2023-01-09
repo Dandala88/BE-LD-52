@@ -8,6 +8,6 @@ namespace BE_LD_52.Services.Interfaces
         public Task<Cell> GetCellInfo(int x, int y);
         public Task<Cell> UpdateCell(Cell cell);
         public Task<GridInfo> GetGrid();
-        public Task<Cell> PrepareCell(string userId, int x, int y, string gameAction, string? cropType);
+        public Task<Cell> PrepareCell(string connectionId, string userId, int x, int y, string gameAction, string? cropType);
     }
 }

@@ -97,7 +97,7 @@ namespace BE_LD_52.Services
             return new GridInfo();
         }
 
-        public async Task<Cell> PrepareCell(string userId, int x, int y, string gameAction, string? cropType)
+        public async Task<Cell> PrepareCell(string connectionId, string userId, int x, int y, string gameAction, string? cropType)
         {
             var cellId = $"{x}|{y}";
 
@@ -126,7 +126,10 @@ namespace BE_LD_52.Services
             {
                 var user = await _userService.GetUserData(new GameUser() { id = userId });
                 if (!user.HasWater)
-                    await _hubContext.Clients.User(userId).SendAsync("Error", "No water");
+                {
+                    await _hubContext.Clients.Client(connectionId).SendAsync("Error", "No water!!!");
+                    return null;
+                }
                 user.HasWater = false;
                 await _userService.UpdateUser(user);
             }
