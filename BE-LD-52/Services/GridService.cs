@@ -101,6 +101,11 @@ namespace BE_LD_52.Services
         {
 
             var user = await _userService.GetUserData(new GameUser() { id = userId });
+            if(user.PerformingAction)
+            {
+                await _hubContext.Clients.Client(connectionId).SendAsync("Error", "Only one action can be performed at a time!");
+                return null;
+            }
 
             var cellId = $"{x}|{y}";
 
@@ -136,7 +141,6 @@ namespace BE_LD_52.Services
                     return null;
                 }
                 user.HasWater = false;
-                await _userService.UpdateUser(user);
             }
 
             if (gameAction.ToLower() == "harvest")
@@ -158,6 +162,8 @@ namespace BE_LD_52.Services
             };
 
             getCell.UserId = userId;
+            user.PerformingAction = true;
+            await _userService.UpdateUser(user);
             await UpdateCell(getCell);
 
             return cell;

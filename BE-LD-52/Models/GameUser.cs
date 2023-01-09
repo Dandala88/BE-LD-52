@@ -9,5 +9,6 @@ namespace BE_LD_52.Models
         public int Currency { get; set; }
         public bool HasWater { get; set; }
         public string ConnectionId { get; set; }
+        public bool PerformingAction { get; set; }
     }
 }
