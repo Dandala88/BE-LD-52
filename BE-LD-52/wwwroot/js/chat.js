@@ -21,6 +21,10 @@ connection.on("ReceiveUser", function (user) {
     userid.innerText = user.id;
 });
 
+connection.on("ReceiveCell", function (cell) {
+    console.log(cell.id)
+});
+
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
 }).catch(function (err) {
@@ -71,7 +75,7 @@ document.getElementById("updateCell").addEventListener("click", function (event)
     var x = document.getElementById("newX").value;
     var y = document.getElementById("newY").value;
 
-    connection.invoke("UpdateCell", x, y, "till").catch(function (err) {
+    connection.invoke("UpdateCell", x, y, "till", 2000).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();
@@ -79,6 +83,13 @@ document.getElementById("updateCell").addEventListener("click", function (event)
 
 document.getElementById("getGrid").addEventListener("click", function (event) {
     connection.invoke("GetGrid").catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});
+
+document.getElementById("timer").addEventListener("click", function (event) {
+    connection.invoke("UpdateCell", 0, 0, "Whoops", 10000).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();

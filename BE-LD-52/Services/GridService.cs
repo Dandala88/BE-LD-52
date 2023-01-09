@@ -78,33 +78,44 @@ namespace BE_LD_52.Services
             return new GridInfo();
         }
 
-        public async Task<Cell> UpdateCell(int x, int y, string gameAction)
+
+
+        public async Task<Cell> PrepareCell(int x, int y, string gameAction)
+        {
+            var cellId = $"{x}|{y}";
+
+            var getCell = await GetCellInfo(x, y);
+
+            //If userid is populated someone "owns" the cell
+            if (getCell.UserId != null)
+                return null;
+
+            if (gameAction == null) return getCell;
+
+            var cellNextState = VerifyNextState(getCell, gameAction);
+
+            if (getCell.State == cellNextState)
+                return getCell;
+
+            var cell = new Cell()
+            {
+                id = getCell.id,
+                X = x,
+                Y = y,
+                State = cellNextState,
+                UserId = null //temp
+            };
+
+            return cell;
+        }
+
+        public async Task<Cell> UpdateCell(Cell cell)
         {
             var container = _cosmosClient.GetContainer("griddatabase", "gridcontainer");
 
             try
             {
-                var cellId = $"{x}|{y}";
-
-                var getCell = await GetCellInfo(x, y);
-
-                if (gameAction == null) return getCell;
-
-                var cellNextState =  VerifyNextState(getCell, gameAction);
-
-                if(getCell.State == cellNextState)
-                    return getCell;
-
-                var cell = new Cell()
-                {
-                    id = getCell.id,
-                    X = x,
-                    Y = y,
-                    State = cellNextState,
-                    UserId = null //temp
-                };
-
-                return await container.UpsertItemAsync<Cell>(cell, partitionKey: new PartitionKey(cellId));
+                return await container.UpsertItemAsync<Cell>(cell, partitionKey: new PartitionKey(cell.id));
             }
             catch (Exception ex)
             {
@@ -123,7 +134,6 @@ namespace BE_LD_52.Services
                         return ("tilled");
                     else if (theAction == "whoops")
                     {
-                        Thread.Sleep(10000);
                         return ("whoops");
                     }
                     break;
