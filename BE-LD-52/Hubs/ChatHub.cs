@@ -104,6 +104,7 @@ namespace BE_LD_52.Hubs
             while(_cells.Count > 0)
             {
                 var c = _cells.Peek();
+                await _gridService.UpdateCell(c);
                 await _hubContext.Clients.All.SendAsync("ReceiveCell", c);
                 _cells.Dequeue();
             }
