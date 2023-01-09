@@ -64,6 +64,8 @@ namespace BE_LD_52.Services
             try
             {
                 var user = await container.ReadItemAsync<GameUser>(gameUser.id, partitionKey: new PartitionKey(gameUser.id));
+                var leaderboard = await GetLeaderboard();
+                await _hubContext.Clients.All.SendAsync("ReceiveLeaderBoard", leaderboard);
                 return user;
             }
             catch (CosmosException ex)
