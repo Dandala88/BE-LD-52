@@ -117,6 +117,13 @@ namespace BE_LD_52.Services
                 getCell.CropValue = GetHarvestValue(cropType);
             }
 
+            if(gameAction.ToLower() == "water")
+            {
+                var user = await _userService.GetUserData(new GameUser() { id = userId });
+                user.HasWater = false;
+                await _userService.UpdateUser(user);
+            }
+
             var cell = new Cell()
             {
                 id = getCell.id,

@@ -13,6 +13,7 @@ namespace BE_LD_52.Hubs
         private readonly IHubContext<ChatHub> _hubContext;
         private string _key;
         private Queue<Cell> _cells = new Queue<Cell>();
+        private Queue<GameUser> _gameUsersCollectingWater = new Queue<GameUser>();
 
         public ChatHub(IConfiguration config, IUserService userService, IGridService gridService, IHubContext<ChatHub> hubContext)
         {
@@ -66,6 +67,28 @@ namespace BE_LD_52.Hubs
             }
         }
 
+        public async Task CollectWater(string userId)
+        {
+            var user = await _userService.GetUserData(new GameUser() { id = userId });
+            if (user != null)
+            {
+                user.HasWater = true;
+                await _userService.UpdateUser(user);
+                _gameUsersCollectingWater.Enqueue(user);
+                SetCollectWaterTimer(10000);
+            }
+        }
+
+        private void SetCollectWaterTimer(double milliseconds)
+        {
+            // Create a timer with a two second interval.
+            _timer = new System.Timers.Timer(milliseconds);
+            // Hook up the Elapsed event for the timer. 
+            _timer.Elapsed += OnWaterCollect;
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
+        }
+
         private void SetUpdateCellTimer(double milliseconds)
         {
             // Create a timer with a two second interval.
@@ -83,6 +106,16 @@ namespace BE_LD_52.Hubs
                 var c = _cells.Peek();
                 await _hubContext.Clients.All.SendAsync("ReceiveCell", c);
                 _cells.Dequeue();
+            }
+        }
+
+        private async void OnWaterCollect(Object source, ElapsedEventArgs e)
+        {
+            while (_gameUsersCollectingWater.Count > 0)
+            {
+                var c = _gameUsersCollectingWater.Peek();
+                await _hubContext.Clients.All.SendAsync("ReceiveUser", c);
+                _gameUsersCollectingWater.Dequeue();
             }
         }
 
