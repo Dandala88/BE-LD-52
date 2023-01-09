@@ -55,26 +55,26 @@ namespace BE_LD_52.Hubs
             await Clients.All.SendAsync("ReceiveCell", cell);
         }
 
-        public async Task UpdateCell(string userId, int x, int y, string gameAction, double durationMs = 0)
+        public async Task UpdateCell(string userId, int x, int y, string gameAction)
         {
             var cell = await _gridService.PrepareCell(userId, x, y, gameAction, null);
 
             if (cell != null)
             {
                 _cells.Enqueue(cell);
-                SetUpdateCellTimer(durationMs);
+                SetUpdateCellTimer(GetDuration(gameAction));
             }
         }
 
         //used for sow action
-        public async Task UpdateCell(string userId, int x, int y, string gameAction, double durationMs = 0, string? cropType = null)
+        public async Task UpdateCell(string userId, int x, int y, string gameAction, string? cropType = null)
         {
             var cell = await _gridService.PrepareCell(userId, x, y, gameAction, cropType);
 
             if (cell != null)
             {
                 _cells.Enqueue(cell);
-                SetUpdateCellTimer(durationMs);
+                SetUpdateCellTimer(GetDuration(gameAction));
             }
         }
 
@@ -95,6 +95,23 @@ namespace BE_LD_52.Hubs
                 var c = _cells.Peek();
                 await _hubContext.Clients.All.SendAsync("ReceiveCell", c);
                 _cells.Dequeue();
+            }
+        }
+
+        private double GetDuration(string action)
+        {
+            var theAction = action.ToLower();
+            switch (theAction)
+            {
+                case "till":
+                        return 10000;
+                case "sow":
+                        return 10000;
+                case "water":
+                        return 10000;
+                case "harvest":
+                    return 10000;
+                default: return 10000;
             }
         }
     }
