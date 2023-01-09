@@ -80,7 +80,7 @@ namespace BE_LD_52.Services
             return new GridInfo();
         }
 
-        public async Task<Cell> PrepareCell(int x, int y, string gameAction, string? cropType)
+        public async Task<Cell> PrepareCell(string userId, int x, int y, string gameAction, string? cropType)
         {
             var cellId = $"{x}|{y}";
 
@@ -113,7 +113,7 @@ namespace BE_LD_52.Services
                 State = cellNextState,
                 CropType = getCell.CropType,
                 CropValue = getCell.CropValue,
-                UserId = null //temp
+                UserId = userId
             };
 
             return cell;
@@ -125,6 +125,8 @@ namespace BE_LD_52.Services
 
             try
             {
+                //free up cell but also need to add cooldown
+                cell.UserId = null;
                 return await container.UpsertItemAsync<Cell>(cell, partitionKey: new PartitionKey(cell.id));
             }
             catch (Exception ex)
@@ -141,19 +143,19 @@ namespace BE_LD_52.Services
             {
                 case "raw":
                     if (theAction == "till")
-                        return "tilled";
-                    else if (theAction == "whoops")
-                    {
-                        return "whoops";
-                    }
+                        return ("tilled");
                     break;
                 case "tilled":
                     if (theAction == "sow")
-                        return "sown";
+                        return ("sown");
                     break;
                 case "sown":
+                    if (theAction == "water")
+                        return ("grown");
+                    break;
+                case "grown":
                     if (theAction == "harvest")
-                        return "raw";
+                        return ("raw");
                     break;
             }
 

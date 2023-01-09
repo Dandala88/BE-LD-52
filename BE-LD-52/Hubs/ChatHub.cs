@@ -67,7 +67,7 @@ namespace BE_LD_52.Hubs
         }
 
         //used for sow action
-        public async Task UpdateCell(int x, int y, string gameAction, double durationMs = 0, string? cropType = null)
+        public async Task UpdateCell(string userId, int x, int y, string gameAction, double durationMs = 0, string? cropType = null)
         {
             var cell = await _gridService.PrepareCell(x, y, gameAction, cropType);
 
