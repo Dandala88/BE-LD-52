@@ -7,5 +7,6 @@ namespace BE_LD_52.Services.Interfaces
         public Task<GameUser> GetUserData(GameUser gameUser);
         public Task<GameUser> UpdateUser(GameUser gameUser);
         public Task<List<GameUser>> GetLeaderboard();
+        public Task<GameUser> GetUserByConnectionId(string connectionId);
     }
 }

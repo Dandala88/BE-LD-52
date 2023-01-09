@@ -16,6 +16,7 @@ namespace BE_LD_52.Hubs
         private double _configMs;
         private Queue<Cell> _cells = new Queue<Cell>();
         private Queue<GameUser> _gameUsersCollectingWater = new Queue<GameUser>();
+        private List<GameUser> _gameUsers = new List<GameUser>();
 
         public ChatHub(IConfiguration config, IUserService userService, IGridService gridService, IHubContext<ChatHub> hubContext)
         {
@@ -60,6 +61,10 @@ namespace BE_LD_52.Hubs
 
         public async Task UpdateCell(string userId, int x, int y, string gameAction, string? cropType = null)
         {
+            var user = await _userService.GetUserData(new GameUser() { id = userId });
+            user.ConnectionId = Context.ConnectionId;
+            await _userService.UpdateUser(user);
+
             var cell = await _gridService.PrepareCell(Context.ConnectionId, userId, x, y, gameAction, cropType);
 
             if (cell != null)
@@ -72,6 +77,8 @@ namespace BE_LD_52.Hubs
         public async Task CollectWater(string userId)
         {
             var user = await _userService.GetUserData(new GameUser() { id = userId });
+            user.ConnectionId = Context.ConnectionId;
+            await _userService.UpdateUser(user);
             if(user.PerformingAction)
             {
                 await Clients.Caller.SendAsync("Error", "Cannot collect water while peforming another action!");
@@ -149,6 +156,14 @@ namespace BE_LD_52.Hubs
                     return _durationMs;
                 default: return _durationMs;
             }
+        }
+
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            var user = await _userService.GetUserByConnectionId(Context.ConnectionId);
+            user.PerformingAction = false;
+            await _userService.UpdateUser(user);
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }

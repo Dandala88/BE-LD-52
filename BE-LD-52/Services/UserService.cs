@@ -36,6 +36,24 @@ namespace BE_LD_52.Services
             }
         }
 
+        public async Task<GameUser> GetUserByConnectionId(string connectionId)
+        {
+
+            var container = _cosmosClient.GetContainer("userdatabase", "usercontainer");
+
+            try
+            {
+                var q = container.GetItemLinqQueryable<GameUser>();
+                var iterator = q.ToFeedIterator();
+                var results = await iterator.ReadNextAsync();
+                return results.Where(r => r.ConnectionId == connectionId).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<GameUser?> GetUserData(GameUser gameUser)
         {
             if (gameUser.id == null)
