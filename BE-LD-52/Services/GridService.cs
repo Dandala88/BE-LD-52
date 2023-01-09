@@ -99,6 +99,9 @@ namespace BE_LD_52.Services
 
         public async Task<Cell> PrepareCell(string connectionId, string userId, int x, int y, string gameAction, string? cropType)
         {
+
+            var user = await _userService.GetUserData(new GameUser() { id = userId });
+
             var cellId = $"{x}|{y}";
 
             var getCell = await GetCellInfo(x, y);
@@ -127,7 +130,6 @@ namespace BE_LD_52.Services
 
             if(gameAction.ToLower() == "water")
             {
-                var user = await _userService.GetUserData(new GameUser() { id = userId });
                 if (!user.HasWater)
                 {
                     await _hubContext.Clients.Client(connectionId).SendAsync("Error", "No water!!!");
@@ -139,9 +141,7 @@ namespace BE_LD_52.Services
 
             if (gameAction.ToLower() == "harvest")
             {
-                var user = await _userService.GetUserData(new GameUser() { id = userId });
                 user.Currency += getCell.CropValue.Value;
-                await _userService.UpdateUser(user);
                 getCell.CropValue = null;
                 getCell.CropType = null;
             }
@@ -156,6 +156,8 @@ namespace BE_LD_52.Services
                 CropValue = getCell.CropValue,
                 UserId = userId
             };
+
+            await _userService.UpdateUser(user);
 
             return cell;
         }
