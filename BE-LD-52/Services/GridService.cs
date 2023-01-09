@@ -154,10 +154,11 @@ namespace BE_LD_52.Services
                 State = cellNextState,
                 CropType = getCell.CropType,
                 CropValue = getCell.CropValue,
-                UserId = userId
+                UserId = null
             };
 
-            await _userService.UpdateUser(user);
+            getCell.UserId = userId;
+            await UpdateCell(getCell);
 
             return cell;
         }
