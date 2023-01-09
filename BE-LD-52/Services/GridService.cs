@@ -1,5 +1,7 @@
-﻿using BE_LD_52.Models;
+﻿using BE_LD_52.Hubs;
+using BE_LD_52.Models;
 using BE_LD_52.Services.Interfaces;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 
@@ -9,11 +11,14 @@ namespace BE_LD_52.Services
     {
         private readonly CosmosClient _cosmosClient;
         private readonly IUserService _userService;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public GridService(IConfiguration config, IUserService userService)
+
+        public GridService(IConfiguration config, IUserService userService, IHubContext<ChatHub> hubContext)
         {
             _cosmosClient = new CosmosClient(connectionString: config.GetSection("Cosmos").Value);
             _userService = userService;
+            _hubContext = hubContext;
         }
 
         public async Task<Cell> GetCellInfo(int x, int y)

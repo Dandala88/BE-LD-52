@@ -1,5 +1,7 @@
-﻿using BE_LD_52.Models;
+﻿using BE_LD_52.Hubs;
+using BE_LD_52.Models;
 using BE_LD_52.Services.Interfaces;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 
@@ -8,10 +10,13 @@ namespace BE_LD_52.Services
     public class UserService: IUserService
     {
         private readonly CosmosClient _cosmosClient;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public UserService(IConfiguration config)
+
+        public UserService(IConfiguration config, IHubContext<ChatHub> hubContext)
         {
             _cosmosClient = new CosmosClient(connectionString: config.GetSection("Cosmos").Value);
+            _hubContext = hubContext;
         }
 
         public async Task<GameUser?> GetUserData(GameUser gameUser)
@@ -28,8 +33,6 @@ namespace BE_LD_52.Services
             }
             catch (CosmosException ex)
             {
-                if (gameUser.Name == null)
-                    return null;
                 var user = await container.CreateItemAsync(gameUser, new PartitionKey(gameUser.id));
                 return user;
             }
@@ -46,6 +49,7 @@ namespace BE_LD_52.Services
             try
             {
                 var user = await container.UpsertItemAsync(gameUser, new PartitionKey(gameUser.id));
+                await _hubContext.Clients.All.SendAsync("ReceiveUser", gameUser);
                 return user;
             }
             catch (Exception ex)
