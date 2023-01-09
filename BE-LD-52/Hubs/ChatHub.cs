@@ -32,6 +32,12 @@ namespace BE_LD_52.Hubs
             await Clients.Caller.SendAsync("ReceiveUser", userData);
         }
 
+        public async Task GetLeaderboard()
+        {
+            var leaderboard = await _userService.GetLeaderboard();
+            await Clients.All.SendAsync("ReceiveLeaderboard", leaderboard);
+        }
+
         public async Task SendMessage(GameAction action)
         {
             await Clients.All.SendAsync("ReceiveMessage", action);

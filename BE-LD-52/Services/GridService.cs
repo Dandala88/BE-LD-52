@@ -82,10 +82,13 @@ namespace BE_LD_52.Services
                 var getResult = await iterator.ReadNextAsync();
 
                 var results = new List<Cell>();
-                while(iterator.HasMoreResults)
+
+                results.AddRange(getResult);
+                while (iterator.HasMoreResults)
                 {
-                    results.AddRange(getResult);
                      getResult = await iterator.ReadNextAsync();
+
+                    results.AddRange(getResult);
                 }
                 var coords = results.Last().id.Split("|");
                 var gridInfo = new GridInfo()

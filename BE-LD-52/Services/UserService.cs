@@ -30,10 +30,13 @@ namespace BE_LD_52.Services
                 var getResult = await iterator.ReadNextAsync();
 
                 var results = new List<GameUser>();
+
+                results.AddRange(getResult);
                 while (iterator.HasMoreResults)
                 {
-                    results.AddRange(getResult);
                     getResult = await iterator.ReadNextAsync();
+
+                    results.AddRange(getResult);
                 }
                 return results.OrderByDescending(r => r.Currency).Take(10).ToList();
             }
