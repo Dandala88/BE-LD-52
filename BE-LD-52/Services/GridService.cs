@@ -169,8 +169,6 @@ namespace BE_LD_52.Services
 
             try
             {
-                //free up cell but also need to add cooldown
-                cell.UserId = null;
                 return await container.UpsertItemAsync<Cell>(cell, partitionKey: new PartitionKey(cell.id));
             }
             catch (Exception ex)
