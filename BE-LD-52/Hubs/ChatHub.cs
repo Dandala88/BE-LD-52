@@ -55,7 +55,7 @@ namespace BE_LD_52.Hubs
             await Clients.All.SendAsync("ReceiveCell", cell);
         }
 
-        public async Task UpdateCell(int x, int y, string gameAction, double durationMs)
+        public async Task UpdateCell(int x, int y, string gameAction, double durationMs = 0)
         {
             var cell = await _gridService.PrepareCell(x, y, gameAction);
 
