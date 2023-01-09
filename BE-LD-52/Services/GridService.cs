@@ -101,11 +101,6 @@ namespace BE_LD_52.Services
         {
 
             var user = await _userService.GetUserData(new GameUser() { id = userId });
-            if(user.PerformingAction)
-            {
-                await _hubContext.Clients.Client(connectionId).SendAsync("Error", "Only one action can be performed at a time!");
-                return null;
-            }
 
             var getCell = await GetCellInfo(x, y);
 
@@ -160,7 +155,6 @@ namespace BE_LD_52.Services
             };
 
             getCell.UserId = user.id;
-            user.PerformingAction = true;
             await _userService.UpdateUser(user);
             var leaderboard = await _userService.GetLeaderboard();
             await _hubContext.Clients.All.SendAsync("ReceiveLeaderBoard", leaderboard);

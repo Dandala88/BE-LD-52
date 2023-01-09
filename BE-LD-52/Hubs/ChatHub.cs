@@ -121,11 +121,9 @@ namespace BE_LD_52.Hubs
             {
                 var c = _cells.Peek();
                 await _gridService.UpdateCell(c);
-                var user = await _userService.GetUserData(new GameUser() { id = c.UserId });
-                user.PerformingAction = false;
-                await _userService.UpdateUser(user);
                 await _hubContext.Clients.All.SendAsync("ReceiveCell", c);
                 c.UserId = null;
+                await _gridService.UpdateCell(c);
                 _cells.Dequeue();
             }
         }
@@ -135,8 +133,6 @@ namespace BE_LD_52.Hubs
             while (_gameUsersCollectingWater.Count > 0)
             {
                 var c = _gameUsersCollectingWater.Peek();
-                c.PerformingAction = false;
-                await _userService.UpdateUser(c);
                 await _hubContext.Clients.All.SendAsync("ReceiveUser", c);
                 _gameUsersCollectingWater.Dequeue();
             }
