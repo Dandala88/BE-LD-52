@@ -38,5 +38,20 @@ namespace BE_LD_52.Services
                 return null;
             }
         }
+
+        public async Task<GameUser> UpdateUser(GameUser gameUser)
+        {
+            var container = _cosmosClient.GetContainer("userdatabase", "usercontainer");
+
+            try
+            {
+                var user = await container.UpsertItemAsync(gameUser, new PartitionKey(gameUser.id));
+                return user;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

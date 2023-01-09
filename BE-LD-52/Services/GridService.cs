@@ -8,10 +8,12 @@ namespace BE_LD_52.Services
     public class GridService : IGridService
     {
         private readonly CosmosClient _cosmosClient;
+        private readonly IUserService _userService;
 
-        public GridService(IConfiguration config)
+        public GridService(IConfiguration config, IUserService userService)
         {
             _cosmosClient = new CosmosClient(connectionString: config.GetSection("Cosmos").Value);
+            _userService = userService;
         }
 
         public async Task<Cell> GetCellInfo(int x, int y)
@@ -78,9 +80,7 @@ namespace BE_LD_52.Services
             return new GridInfo();
         }
 
-
-
-        public async Task<Cell> PrepareCell(int x, int y, string gameAction)
+        public async Task<Cell> PrepareCell(int x, int y, string gameAction, string? cropType)
         {
             var cellId = $"{x}|{y}";
 
@@ -94,8 +94,16 @@ namespace BE_LD_52.Services
 
             var cellNextState = VerifyNextState(getCell, gameAction);
 
+            //guard against same action on cell
             if (getCell.State == cellNextState)
                 return getCell;
+
+
+            if (gameAction.ToLower() == "sow")
+            {
+                getCell.CropType = cropType;
+                getCell.CropValue = GetHarvestValue(cropType);
+            }
 
             var cell = new Cell()
             {
@@ -103,6 +111,8 @@ namespace BE_LD_52.Services
                 X = x,
                 Y = y,
                 State = cellNextState,
+                CropType = getCell.CropType,
+                CropValue = getCell.CropValue,
                 UserId = null //temp
             };
 
@@ -131,23 +141,38 @@ namespace BE_LD_52.Services
             {
                 case "raw":
                     if (theAction == "till")
-                        return ("tilled");
+                        return "tilled";
                     else if (theAction == "whoops")
                     {
-                        return ("whoops");
+                        return "whoops";
                     }
                     break;
                 case "tilled":
                     if (theAction == "sow")
-                        return ("sown");
+                        return "sown";
                     break;
                 case "sown":
                     if (theAction == "harvest")
-                        return ("raw");
+                        return "raw";
                     break;
             }
 
             return cell.State;
+        }
+
+        private int GetHarvestValue(string cropType)
+        {
+            var crop = cropType.ToLower();
+            switch(crop)
+            {
+                case "wheat":
+                    return 1;
+                case "vegetable":
+                    return 2;
+                case "fruit":
+                    return 3;
+                default: return 0;
+            }
         }
     }
 }

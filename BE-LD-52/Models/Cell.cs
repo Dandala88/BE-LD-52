@@ -7,5 +7,7 @@
         public int? Y { get; set; }
         public string? State { get; set; }
         public string? UserId { get; set; }
+        public string? CropType { get; set; }
+        public int? CropValue { get; set; }
     }
 }
