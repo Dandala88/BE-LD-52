@@ -79,16 +79,10 @@ namespace BE_LD_52.Hubs
             var user = await _userService.GetUserData(new GameUser() { id = userId });
             user.ConnectionId = Context.ConnectionId;
             await _userService.UpdateUser(user);
-            if(user.PerformingAction)
-            {
-                await Clients.Caller.SendAsync("Error", "Cannot collect water while peforming another action!");
-                return;
-            }    
 
             if (user != null)
             {
                 user.HasWater = true;
-                user.PerformingAction = true;
                 await _userService.UpdateUser(user);
                 _gameUsersCollectingWater.Enqueue(user);
                 SetCollectWaterTimer(_durationMs);
