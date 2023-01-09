@@ -79,7 +79,7 @@ document.getElementById("updateCell").addEventListener("click", function (event)
     var x = document.getElementById("newX").value;
     var y = document.getElementById("newY").value;
 
-    connection.invoke("UpdateCell", parseInt(x), y, "till", 2000).catch(function (err) {
+    connection.invoke("UpdateCell", "b5781788-18d1-4153-a61a-5925205accfa", parseInt(x), parseInt(y), "till", "wheat").catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();

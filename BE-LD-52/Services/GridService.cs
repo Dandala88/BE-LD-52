@@ -107,8 +107,6 @@ namespace BE_LD_52.Services
                 return null;
             }
 
-            var cellId = $"{x}|{y}";
-
             var getCell = await GetCellInfo(x, y);
 
             //If userid is populated someone "owns" the cell
@@ -158,10 +156,10 @@ namespace BE_LD_52.Services
                 State = cellNextState,
                 CropType = getCell.CropType,
                 CropValue = getCell.CropValue,
-                UserId = null
+                UserId = user.id
             };
 
-            getCell.UserId = userId;
+            getCell.UserId = user.id;
             user.PerformingAction = true;
             await _userService.UpdateUser(user);
             var leaderboard = await _userService.GetLeaderboard();

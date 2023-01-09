@@ -125,6 +125,7 @@ namespace BE_LD_52.Hubs
                 user.PerformingAction = false;
                 await _userService.UpdateUser(user);
                 await _hubContext.Clients.All.SendAsync("ReceiveCell", c);
+                c.UserId = null;
                 _cells.Dequeue();
             }
         }
