@@ -55,9 +55,9 @@ namespace BE_LD_52.Hubs
             await Clients.All.SendAsync("ReceiveCell", cell);
         }
 
-        public async Task UpdateCell(int x, int y, string gameAction, double durationMs = 0)
+        public async Task UpdateCell(string userId, int x, int y, string gameAction, double durationMs = 0)
         {
-            var cell = await _gridService.PrepareCell(x, y, gameAction, null);
+            var cell = await _gridService.PrepareCell(userId, x, y, gameAction, null);
 
             if (cell != null)
             {
@@ -69,7 +69,7 @@ namespace BE_LD_52.Hubs
         //used for sow action
         public async Task UpdateCell(string userId, int x, int y, string gameAction, double durationMs = 0, string? cropType = null)
         {
-            var cell = await _gridService.PrepareCell(x, y, gameAction, cropType);
+            var cell = await _gridService.PrepareCell(userId, x, y, gameAction, cropType);
 
             if (cell != null)
             {
