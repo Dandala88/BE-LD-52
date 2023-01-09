@@ -27,7 +27,14 @@ namespace BE_LD_52.Services
             {
                 var q = container.GetItemLinqQueryable<GameUser>();
                 var iterator = q.ToFeedIterator();
-                var results = await iterator.ReadNextAsync();
+                var getResult = await iterator.ReadNextAsync();
+
+                var results = new List<GameUser>();
+                while (iterator.HasMoreResults)
+                {
+                    results.AddRange(getResult);
+                    getResult = await iterator.ReadNextAsync();
+                }
                 return results.OrderByDescending(r => r.Currency).Take(10).ToList();
             }
             catch (Exception ex)
