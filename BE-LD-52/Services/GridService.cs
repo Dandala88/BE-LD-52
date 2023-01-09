@@ -125,6 +125,8 @@ namespace BE_LD_52.Services
             if(gameAction.ToLower() == "water")
             {
                 var user = await _userService.GetUserData(new GameUser() { id = userId });
+                if (!user.HasWater)
+                    return null;
                 user.HasWater = false;
                 await _userService.UpdateUser(user);
             }
