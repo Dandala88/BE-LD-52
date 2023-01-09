@@ -19,6 +19,23 @@ namespace BE_LD_52.Services
             _hubContext = hubContext;
         }
 
+        public async Task<List<GameUser>> GetLeaderboard()
+        {
+            var container = _cosmosClient.GetContainer("userdatabase", "usercontainer");
+
+            try
+            {
+                var q = container.GetItemLinqQueryable<GameUser>();
+                var iterator = q.ToFeedIterator();
+                var results = await iterator.ReadNextAsync();
+                return results.OrderByDescending(r => r.Currency).Take(10).ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<GameUser?> GetUserData(GameUser gameUser)
         {
             if (gameUser.id == null)

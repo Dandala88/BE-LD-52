@@ -25,6 +25,10 @@ connection.on("ReceiveCell", function (cell) {
     console.log(cell.id)
 });
 
+connection.on("ReceiveLeaderboard", function (leaderboard) {
+    console.log(leaderboard);
+});
+
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
 }).catch(function (err) {
@@ -90,6 +94,13 @@ document.getElementById("getGrid").addEventListener("click", function (event) {
 
 document.getElementById("timer").addEventListener("click", function (event) {
     connection.invoke("UpdateCell","asdfds", 0, 0, "till").catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});
+
+document.getElementById("leaderboard").addEventListener("click", function (event) {
+    connection.invoke("GetLeaderboard").catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();

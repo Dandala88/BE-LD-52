@@ -150,5 +150,11 @@ namespace BE_LD_52.Hubs
                 default: return _durationMs;
             }
         }
+
+        public async Task GetLeaderboard()
+        {
+            var leaderboard = await _userService.GetLeaderboard();
+            await Clients.All.SendAsync("ReceiveLeaderBoard", leaderboard);
+        }
     }
 }
