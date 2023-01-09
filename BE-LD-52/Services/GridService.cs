@@ -131,6 +131,15 @@ namespace BE_LD_52.Services
                 await _userService.UpdateUser(user);
             }
 
+            if (gameAction.ToLower() == "harvest")
+            {
+                var user = await _userService.GetUserData(new GameUser() { id = userId });
+                user.Currency += getCell.CropValue.Value;
+                await _userService.UpdateUser(user);
+                getCell.CropValue = null;
+                getCell.CropType = null;
+            }
+
             var cell = new Cell()
             {
                 id = getCell.id,
