@@ -164,6 +164,8 @@ namespace BE_LD_52.Services
             getCell.UserId = userId;
             user.PerformingAction = true;
             await _userService.UpdateUser(user);
+            var leaderboard = await _userService.GetLeaderboard();
+            await _hubContext.Clients.All.SendAsync("ReceiveLeaderBoard", leaderboard);
             await UpdateCell(getCell);
 
             return cell;
