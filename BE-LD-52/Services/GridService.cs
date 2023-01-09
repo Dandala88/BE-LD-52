@@ -105,7 +105,10 @@ namespace BE_LD_52.Services
 
             //If userid is populated someone "owns" the cell
             if (getCell.UserId != null)
+            {
+                await _hubContext.Clients.Client(connectionId).SendAsync("Error", "Selected land is already being worked!!!");
                 return null;
+            }
 
             if (gameAction == null) return getCell;
 
