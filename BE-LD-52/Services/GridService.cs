@@ -156,7 +156,7 @@ namespace BE_LD_52.Services
                 State = cellNextState,
                 CropType = getCell.CropType,
                 CropValue = getCell.CropValue,
-                UserId = user.id
+                UserId = null
             };
 
             getCell.UserId = user.id;
