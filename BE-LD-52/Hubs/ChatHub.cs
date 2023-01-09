@@ -7,6 +7,7 @@ namespace BE_LD_52.Hubs
 {
     public class ChatHub : Hub
     {
+        const double testingSeconds = 1000;
         private System.Timers.Timer _timer;
         private readonly IUserService _userService;
         private readonly IGridService _gridService;
@@ -75,7 +76,7 @@ namespace BE_LD_52.Hubs
                 user.HasWater = true;
                 await _userService.UpdateUser(user);
                 _gameUsersCollectingWater.Enqueue(user);
-                SetCollectWaterTimer(10000);
+                SetCollectWaterTimer(testingSeconds);
             }
         }
 
@@ -126,14 +127,14 @@ namespace BE_LD_52.Hubs
             switch (theAction)
             {
                 case "till":
-                        return 10000;
+                        return testingSeconds;
                 case "sow":
-                        return 10000;
+                        return testingSeconds;
                 case "water":
-                        return 10000;
+                        return testingSeconds;
                 case "harvest":
-                    return 10000;
-                default: return 10000;
+                    return testingSeconds;
+                default: return testingSeconds;
             }
         }
     }
