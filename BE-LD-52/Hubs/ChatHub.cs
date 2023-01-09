@@ -148,13 +148,5 @@ namespace BE_LD_52.Hubs
                 default: return _durationMs;
             }
         }
-
-        public override async Task OnDisconnectedAsync(Exception? exception)
-        {
-            var user = await _userService.GetUserByConnectionId(Context.ConnectionId);
-            user.PerformingAction = false;
-            await _userService.UpdateUser(user);
-            await base.OnDisconnectedAsync(exception);
-        }
     }
 }
