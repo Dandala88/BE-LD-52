@@ -43,7 +43,7 @@ namespace BE_LD_52.Services
                     Random rnd = new Random();
                     var next = rnd.Next(10);
                     var newCellState = "";
-                    if (next > 9)
+                    if (next > 8)
                     {
                         newCellState = "water";
                     }

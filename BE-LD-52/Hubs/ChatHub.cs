@@ -55,7 +55,6 @@ namespace BE_LD_52.Hubs
             await Clients.All.SendAsync("ReceiveCell", cell);
         }
 
-        //used for sow action
         public async Task UpdateCell(string userId, int x, int y, string gameAction, string? cropType = null)
         {
             var cell = await _gridService.PrepareCell(userId, x, y, gameAction, cropType);

@@ -89,7 +89,7 @@ document.getElementById("getGrid").addEventListener("click", function (event) {
 });
 
 document.getElementById("timer").addEventListener("click", function (event) {
-    connection.invoke("UpdateCell", 0, 0, "Whoops", 10000).catch(function (err) {
+    connection.invoke("UpdateCell","asdfds", 0, 0, "till").catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();
