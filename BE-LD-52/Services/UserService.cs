@@ -96,7 +96,8 @@ namespace BE_LD_52.Services
             try
             {
                 var user = await container.UpsertItemAsync(gameUser, new PartitionKey(gameUser.id));
-                await _hubContext.Clients.All.SendAsync("ReceiveUser", gameUser);
+                var conUser = await GetUserByConnectionId(gameUser.ConnectionId);
+                await _hubContext.Clients.Client(conUser.ConnectionId).SendAsync("ReceiveUser", conUser);
                 return user;
             }
             catch (Exception ex)
